@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "tomaxpacktoggle",
+  "version": "${version}",
+  "name": "Tomax Pack Toggle",
+  "description": "Druk op Right Shift om de lTomaxMC texture packs aan/uit te zetten.",
+  "authors": ["Jij"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["nl.tomax.packtoggle.TomaxPackToggleClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
