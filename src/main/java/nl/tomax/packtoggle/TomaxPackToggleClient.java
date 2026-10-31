@@ -6,7 +6,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
+import net.fabricmc.loader.api.FabricLoader;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.LoggerFactory;
 
 public class TomaxPackToggleClient implements ClientModInitializer {
 
@@ -17,6 +19,10 @@ public class TomaxPackToggleClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        String v = FabricLoader.getInstance().getModContainer("tomaxpacktoggle")
+                .map(c -> c.getMetadata().getVersion().getFriendlyString()).orElse("?");
+        LoggerFactory.getLogger("tomaxpacktoggle").info("Tomax Pack Toggle v{} geladen", v);
+
         OPEN_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.tomaxpacktoggle.open",
                 InputConstants.Type.KEYSYM,
