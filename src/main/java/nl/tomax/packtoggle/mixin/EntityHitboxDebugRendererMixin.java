@@ -42,6 +42,7 @@ public class EntityHitboxDebugRendererMixin {
             require = 0
     )
     private static GizmoStyle tomaxpacktoggle$stroke(int color) {
+        if (TomaxConfig.vanillaHitbox) return GizmoStyle.stroke(color);
         return GizmoStyle.stroke(PackHitboxColor.styleColor(color), TomaxConfig.width);
     }
 
@@ -52,6 +53,7 @@ public class EntityHitboxDebugRendererMixin {
             require = 0
     )
     private static GizmoStyle tomaxpacktoggle$strokeWidth(int color, float width) {
+        if (TomaxConfig.vanillaHitbox) return GizmoStyle.stroke(color, width);
         return GizmoStyle.stroke(PackHitboxColor.styleColor(color), TomaxConfig.width);
     }
 }

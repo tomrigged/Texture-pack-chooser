@@ -71,6 +71,7 @@ public final class PackHitboxColor {
      * Dit geldt voor zowel de hitbox als het hoofd (rode ooghoogte-box).
      */
     public static int styleColor(int color) {
+        if (TomaxConfig.vanillaHitbox) return color;
         boolean white = color == 0xFFFFFFFF;
         boolean eye = color == 0xFFFF0000;
         if (!white && !eye) return color;

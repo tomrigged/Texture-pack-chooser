@@ -42,6 +42,7 @@ public class EntityHitboxArrowMixin {
     }
 
     private static int hide(int color) {
+        if (nl.tomax.packtoggle.TomaxConfig.vanillaHitbox) return color;
         if (color == VANILLA_VIEW_BLUE) {
             if (!logged) {
                 logged = true;

@@ -14,6 +14,8 @@ public final class TomaxConfig {
 
     public static boolean hitboxEnabled = true;
     public static float width = 4.0F;
+    /** true = gewone Minecraft hitbox (geen pack-kleur, normale dikte, pijl zichtbaar) */
+    public static boolean vanillaHitbox = false;
 
     public static final float MIN_WIDTH = 0.5F;
     public static final float MAX_WIDTH = 10.0F;
@@ -36,6 +38,7 @@ public final class TomaxConfig {
             Properties p = new Properties();
             p.load(in);
             hitboxEnabled = Boolean.parseBoolean(p.getProperty("hitboxEnabled", "true"));
+            vanillaHitbox = Boolean.parseBoolean(p.getProperty("vanillaHitbox", "false"));
             width = clampWidth(Float.parseFloat(p.getProperty("width", "4.0")));
         } catch (IOException | NumberFormatException ignored) {
         }
@@ -44,6 +47,7 @@ public final class TomaxConfig {
     public static void save() {
         Properties p = new Properties();
         p.setProperty("hitboxEnabled", Boolean.toString(hitboxEnabled));
+        p.setProperty("vanillaHitbox", Boolean.toString(vanillaHitbox));
         p.setProperty("width", Float.toString(width));
         try (OutputStream out = Files.newOutputStream(file())) {
             p.store(out, "Tomax Pack Toggle");

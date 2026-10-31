@@ -88,6 +88,14 @@ public class PackToggleScreen extends Screen {
         this.addRenderableWidget(hitboxBtn);
 
         y += rowH;
+        vanillaBtn = Button.builder(vanillaLabel(), b -> {
+            TomaxConfig.vanillaHitbox = !TomaxConfig.vanillaHitbox;
+            TomaxConfig.save();
+            b.setMessage(vanillaLabel());
+        }).bounds(left, y, fullW, 20).build();
+        this.addRenderableWidget(vanillaBtn);
+
+        y += rowH;
         this.addRenderableWidget(Button.builder(Component.literal("-"), b -> changeWidth(-0.5F))
                 .bounds(left, y, 30, 20).build());
         widthLabel = Button.builder(widthText(), b -> {}).bounds(left + 34, y, fullW - 68, 20).build();
@@ -107,6 +115,7 @@ public class PackToggleScreen extends Screen {
     }
 
     private Button hitboxBtn;
+    private Button vanillaBtn;
     private Button widthLabel;
 
     private Component hitboxLabel() {
@@ -114,6 +123,13 @@ public class PackToggleScreen extends Screen {
         MutableComponent state = Component.literal(on ? "AAN" : "UIT")
                 .withStyle(on ? ChatFormatting.GREEN : ChatFormatting.RED);
         return Component.literal("Hitbox (F3 + B): ").append(state);
+    }
+
+    private Component vanillaLabel() {
+        boolean on = TomaxConfig.vanillaHitbox;
+        MutableComponent state = Component.literal(on ? "AAN" : "UIT")
+                .withStyle(on ? ChatFormatting.GREEN : ChatFormatting.RED);
+        return Component.literal("Normale hitbox: ").append(state);
     }
 
     private Component widthText() {
