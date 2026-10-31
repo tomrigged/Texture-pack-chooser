@@ -1,6 +1,12 @@
 package nl.tomax.packtoggle;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +47,40 @@ public final class PackHitboxColor {
     }
 
     private PackHitboxColor() {}
+
+    /** Lijndikte van de hitbox in pixels. Pas dit getal aan als je hem dikker/dunner wilt. */
+    public static final float WIDTH = 4.0F;
+
+    /** De entity waarvan de hitbox op dit moment getekend wordt (render thread). */
+    public static Entity currentEntity;
+
+    /** True als jij binnen aanvalsbereik (reach) van deze andere speler staat. */
+    public static boolean inReach(Entity e) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer me = mc.player;
+        if (me == null || e == null || e == me || !(e instanceof Player)) return false;
+        Vec3 eye = me.getEyePosition();
+        AABB b = e.getBoundingBox();
+        double dx = Math.max(Math.max(b.minX - eye.x, 0.0), eye.x - b.maxX);
+        double dy = Math.max(Math.max(b.minY - eye.y, 0.0), eye.y - b.maxY);
+        double dz = Math.max(Math.max(b.minZ - eye.z, 0.0), eye.z - b.maxZ);
+        double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        return dist <= me.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE);
+    }
+
+    /**
+     * Bepaalt de kleur van een hitbox-lijn.
+     * Binnen reach van een tegenstander: hoofd-hitbox wit. Anders: kleur van de actieve pack.
+     * Het hoofd (rode ooghoogte-box) krijgt altijd de pack-kleur.
+     */
+    public static int styleColor(int color) {
+        boolean white = color == 0xFFFFFFFF;
+        boolean eye = color == 0xFFFF0000;
+        if (!white && !eye) return color;
+        if (white && inReach(currentEntity)) return 0xFFFFFFFF;
+        int argb = currentArgb();
+        return argb != 0 ? argb : color;
+    }
 
     /** Zelfde als current(), maar als ARGB-int (0xAARRGGBB). Geeft 0 als er geen pack actief is. */
     public static int currentArgb() {

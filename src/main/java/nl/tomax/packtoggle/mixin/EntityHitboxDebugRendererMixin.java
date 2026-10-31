@@ -1,48 +1,52 @@
 package nl.tomax.packtoggle.mixin;
 
 import net.minecraft.client.renderer.debug.EntityHitboxDebugRenderer;
+import net.minecraft.gizmos.GizmoStyle;
+import net.minecraft.world.entity.Entity;
 import nl.tomax.packtoggle.PackHitboxColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * In 1.21.11 tekent vanilla elke hitbox in EntityHitboxDebugRenderer#showHitboxes met
- * Gizmos.cuboid(box, GizmoStyle.stroke(kleur)).
- * Hier vervangen we wit (hitbox) en rood (ooghoogte/hoofd) door de kleur van de actieve pack.
+ * Past in EntityHitboxDebugRenderer#showHitboxes de kleur en dikte van de hitbox aan:
+ *  - kleur van de actieve pack (binnen reach van een tegenstander: wit)
+ *  - dikkere lijnen
  */
 @Mixin(EntityHitboxDebugRenderer.class)
 public class EntityHitboxDebugRendererMixin {
 
     private static final String SHOW = "showHitboxes(Lnet/minecraft/world/entity/Entity;FZ)V";
 
-    @ModifyArg(
+    @Inject(method = SHOW, at = @At("HEAD"), require = 0)
+    private static void tomaxpacktoggle$begin(Entity entity, float partialTick, boolean server, CallbackInfo ci) {
+        PackHitboxColor.currentEntity = entity;
+    }
+
+    @Inject(method = SHOW, at = @At("RETURN"), require = 0)
+    private static void tomaxpacktoggle$end(Entity entity, float partialTick, boolean server, CallbackInfo ci) {
+        PackHitboxColor.currentEntity = null;
+    }
+
+    @Redirect(
             method = SHOW,
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/gizmos/GizmoStyle;stroke(I)Lnet/minecraft/gizmos/GizmoStyle;"),
-            index = 0,
             require = 0
     )
-    private static int tomaxpacktoggle$recolor(int color) {
-        return recolor(color);
+    private static GizmoStyle tomaxpacktoggle$stroke(int color) {
+        return GizmoStyle.stroke(PackHitboxColor.styleColor(color), PackHitboxColor.WIDTH);
     }
 
-    @ModifyArg(
+    @Redirect(
             method = SHOW,
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/gizmos/GizmoStyle;stroke(IF)Lnet/minecraft/gizmos/GizmoStyle;"),
-            index = 0,
             require = 0
     )
-    private static int tomaxpacktoggle$recolorWidth(int color) {
-        return recolor(color);
-    }
-
-    private static int recolor(int color) {
-        if (color == 0xFFFFFFFF || color == 0xFFFF0000) {
-            int argb = PackHitboxColor.currentArgb();
-            if (argb != 0) return argb;
-        }
-        return color;
+    private static GizmoStyle tomaxpacktoggle$strokeWidth(int color, float width) {
+        return GizmoStyle.stroke(PackHitboxColor.styleColor(color), PackHitboxColor.WIDTH);
     }
 }
