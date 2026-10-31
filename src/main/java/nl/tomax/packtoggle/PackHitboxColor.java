@@ -42,6 +42,16 @@ public final class PackHitboxColor {
 
     private PackHitboxColor() {}
 
+    /** Zelfde als current(), maar als ARGB-int (0xAARRGGBB). Geeft 0 als er geen pack actief is. */
+    public static int currentArgb() {
+        float[] c = current();
+        if (c == null) return 0;
+        int r = Math.round(c[0] * 255F) & 0xFF;
+        int g = Math.round(c[1] * 255F) & 0xFF;
+        int b = Math.round(c[2] * 255F) & 0xFF;
+        return 0xFF000000 | (r << 16) | (g << 8) | b;
+    }
+
     /** RGB van de actieve Tomax pack, of null als er geen actief is. Bij meerdere wint de bovenste. */
     public static float[] current() {
         Minecraft mc = Minecraft.getInstance();

@@ -4,6 +4,6 @@
   "package": "nl.tomax.packtoggle.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "HitboxRenderStateMixin"
+    "EntityHitboxDebugRendererMixin"
   ]
 }
