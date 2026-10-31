@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
  * In 1.21.11 tekent vanilla elke hitbox in EntityHitboxDebugRenderer#showHitboxes met
  * Gizmos.cuboid(box, GizmoStyle.stroke(kleur)).
  * Hier vervangen we de standaard witte kleur door de kleur van de actieve pack.
- * De rode ooghoogte-lijn en blauwe kijkrichting-lijn zijn niet wit en blijven vanilla.
+ * Ook de rode ooghoogte-box (het hoofd) krijgt de pack-kleur.
  */
 @Mixin(EntityHitboxDebugRenderer.class)
 public class EntityHitboxDebugRendererMixin {
@@ -25,7 +25,7 @@ public class EntityHitboxDebugRendererMixin {
             require = 0
     )
     private static int tomaxpacktoggle$recolor(int color) {
-        if (color == 0xFFFFFFFF) {
+        if (color == 0xFFFFFFFF || color == 0xFFFF0000) { // wit = hitbox, rood = ooghoogte/hoofd
             int argb = PackHitboxColor.currentArgb();
             if (argb != 0) return argb;
         }
