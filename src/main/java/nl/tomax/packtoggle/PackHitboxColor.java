@@ -2,6 +2,9 @@ package nl.tomax.packtoggle;
 
 import net.minecraft.client.Minecraft;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -14,6 +17,9 @@ import java.util.regex.Pattern;
 public final class PackHitboxColor {
 
     private record Entry(Pattern pattern, float[] rgb) {}
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("tomaxpacktoggle");
+    private static String lastLogged = null;
 
     private static final Map<String, Entry> COLORS = new LinkedHashMap<>();
 
@@ -42,14 +48,20 @@ public final class PackHitboxColor {
         if (mc == null || mc.getResourcePackRepository() == null) return null;
 
         float[] result = null;
+        String found = null;
         for (String id : mc.getResourcePackRepository().getSelectedIds()) {
             String lower = id.toLowerCase(Locale.ROOT);
             if (!lower.contains("tomaxmc")) continue;
             for (Entry e : COLORS.values()) {
                 if (e.pattern().matcher(lower).find()) {
                     result = e.rgb();
+                    found = id;
                 }
             }
+        }
+        if (!java.util.Objects.equals(found, lastLogged)) {
+            lastLogged = found;
+            LOGGER.info("Hitbox-kleur pack: {}", found == null ? "geen" : found);
         }
         return result;
     }
