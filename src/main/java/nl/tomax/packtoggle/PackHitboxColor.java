@@ -3,7 +3,6 @@ package nl.tomax.packtoggle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -43,24 +42,23 @@ public final class PackHitboxColor {
         add("red",    1.00f, 0.15f, 0.15f);
         add("pink",   1.00f, 0.40f, 0.75f);
         add("yellow", 1.00f, 0.90f, 0.10f);
+        add("grey",   0.65f, 0.65f, 0.65f);
+        add("gray",   0.65f, 0.65f, 0.65f);
     }
 
     private PackHitboxColor() {}
-
-    /** Lijndikte van de hitbox in pixels. Pas dit getal aan als je hem dikker/dunner wilt. */
-    public static final float WIDTH = 4.0F;
 
     /** De entity waarvan de hitbox op dit moment getekend wordt (render thread). */
     public static Entity currentEntity;
 
     /**
-     * True alleen als je deze andere speler nu echt kunt raken:
+     * True alleen als je deze entity (speler of mob) nu echt kunt raken:
      * je crosshair staat op hem EN hij zit binnen reach (dit is Minecrafts eigen doelwit-check).
      */
     public static boolean inReach(Entity e) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer me = mc.player;
-        if (me == null || e == null || e == me || !(e instanceof Player)) return false;
+        if (me == null || e == null || e == me) return false;
         HitResult hit = mc.hitResult;
         return hit instanceof EntityHitResult ehr
                 && hit.getType() == HitResult.Type.ENTITY

@@ -23,6 +23,8 @@ public class TomaxPackToggleClient implements ClientModInitializer {
                 .map(c -> c.getMetadata().getVersion().getFriendlyString()).orElse("?");
         LoggerFactory.getLogger("tomaxpacktoggle").info("Tomax Pack Toggle v{} geladen", v);
 
+        TomaxConfig.load();
+
         OPEN_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.tomaxpacktoggle.open",
                 InputConstants.Type.KEYSYM,

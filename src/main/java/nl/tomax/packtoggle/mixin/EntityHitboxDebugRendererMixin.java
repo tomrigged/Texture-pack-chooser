@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.debug.EntityHitboxDebugRenderer;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.world.entity.Entity;
 import nl.tomax.packtoggle.PackHitboxColor;
+import nl.tomax.packtoggle.TomaxConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,8 +21,12 @@ public class EntityHitboxDebugRendererMixin {
 
     private static final String SHOW = "showHitboxes(Lnet/minecraft/world/entity/Entity;FZ)V";
 
-    @Inject(method = SHOW, at = @At("HEAD"), require = 0)
+    @Inject(method = SHOW, at = @At("HEAD"), cancellable = true, require = 0)
     private static void tomaxpacktoggle$begin(Entity entity, float partialTick, boolean server, CallbackInfo ci) {
+        if (!TomaxConfig.hitboxEnabled) {
+            ci.cancel(); // hitbox uit via het Right Shift menu
+            return;
+        }
         PackHitboxColor.currentEntity = entity;
     }
 
@@ -37,7 +42,7 @@ public class EntityHitboxDebugRendererMixin {
             require = 0
     )
     private static GizmoStyle tomaxpacktoggle$stroke(int color) {
-        return GizmoStyle.stroke(PackHitboxColor.styleColor(color), PackHitboxColor.WIDTH);
+        return GizmoStyle.stroke(PackHitboxColor.styleColor(color), TomaxConfig.width);
     }
 
     @Redirect(
@@ -47,6 +52,6 @@ public class EntityHitboxDebugRendererMixin {
             require = 0
     )
     private static GizmoStyle tomaxpacktoggle$strokeWidth(int color, float width) {
-        return GizmoStyle.stroke(PackHitboxColor.styleColor(color), PackHitboxColor.WIDTH);
+        return GizmoStyle.stroke(PackHitboxColor.styleColor(color), TomaxConfig.width);
     }
 }

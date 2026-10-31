@@ -77,14 +77,53 @@ public class PackToggleScreen extends Screen {
             this.addRenderableWidget(btn);
         }
 
-        int bottomY = Math.min(this.height - 28, top + perCol * rowH + 16);
+        int fullW = colW * 2 + gap;
+        int y = top + perCol * rowH + 6;
+
+        hitboxBtn = Button.builder(hitboxLabel(), b -> {
+            TomaxConfig.hitboxEnabled = !TomaxConfig.hitboxEnabled;
+            TomaxConfig.save();
+            b.setMessage(hitboxLabel());
+        }).bounds(left, y, fullW, 20).build();
+        this.addRenderableWidget(hitboxBtn);
+
+        y += rowH;
+        this.addRenderableWidget(Button.builder(Component.literal("-"), b -> changeWidth(-0.5F))
+                .bounds(left, y, 30, 20).build());
+        widthLabel = Button.builder(widthText(), b -> {}).bounds(left + 34, y, fullW - 68, 20).build();
+        widthLabel.active = false;
+        this.addRenderableWidget(widthLabel);
+        this.addRenderableWidget(Button.builder(Component.literal("+"), b -> changeWidth(0.5F))
+                .bounds(left + fullW - 30, y, 30, 20).build());
+
+        y += rowH + 4;
         this.addRenderableWidget(Button.builder(Component.literal("Toepassen"), b -> {
             apply();
             this.onClose();
-        }).bounds(this.width / 2 - colW - gap / 2, bottomY, colW, 20).build());
+        }).bounds(left, y, colW, 20).build());
 
         this.addRenderableWidget(Button.builder(Component.literal("Annuleren"), b -> this.onClose())
-                .bounds(this.width / 2 + gap / 2, bottomY, colW, 20).build());
+                .bounds(right, y, colW, 20).build());
+    }
+
+    private Button hitboxBtn;
+    private Button widthLabel;
+
+    private Component hitboxLabel() {
+        boolean on = TomaxConfig.hitboxEnabled;
+        MutableComponent state = Component.literal(on ? "AAN" : "UIT")
+                .withStyle(on ? ChatFormatting.GREEN : ChatFormatting.RED);
+        return Component.literal("Hitbox (F3 + B): ").append(state);
+    }
+
+    private Component widthText() {
+        return Component.literal("Hitbox dikte: " + TomaxConfig.width);
+    }
+
+    private void changeWidth(float delta) {
+        TomaxConfig.width = TomaxConfig.clampWidth(TomaxConfig.width + delta);
+        TomaxConfig.save();
+        widthLabel.setMessage(widthText());
     }
 
     private Component label(String id) {

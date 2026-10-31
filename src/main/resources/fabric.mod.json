@@ -3,9 +3,10 @@
   "id": "tomaxpacktoggle",
   "version": "${version}",
   "name": "Tomax Pack Toggle",
-  "description": "Druk op Right Shift om de lTomaxMC texture packs aan/uit te zetten.",
+  "description": "Druk op Right Shift om de lTomaxMC texture packs aan/uit te zetten, met hitbox-kleur en dikte.",
   "authors": ["Jij"],
   "license": "MIT",
+  "icon": "assets/tomaxpacktoggle/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": ["nl.tomax.packtoggle.TomaxPackToggleClient"]
