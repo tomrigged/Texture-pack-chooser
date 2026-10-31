@@ -10,6 +10,7 @@
   "entrypoints": {
     "client": ["nl.tomax.packtoggle.TomaxPackToggleClient"]
   },
+  "mixins": ["tomaxpacktoggle.mixins.json"],
   "depends": {
     "fabricloader": ">=0.18.1",
     "minecraft": "1.21.11",

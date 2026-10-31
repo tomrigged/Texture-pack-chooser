@@ -13,3 +13,8 @@ Packs hebben ook nodig: Fabric API, Celestial, Respackopts (voor de skybox / opt
 1. Maak een nieuwe repo, upload alle bestanden uit deze map (incl. `.github`).
 2. Tab **Actions** → "Build mod" → na het draaien: download artifact `tomax-pack-toggle`.
 3. Jar in `.minecraft/mods/`.
+
+## Hitbox-kleur
+Zodra een lTomaxMC pack actief is, krijgt de hitbox (F3 + B) de kleur van die pack
+(orange = oranje, blue = blauw, enz.). Kleuren aanpassen: `PackHitboxColor.java`.
+De rode ooghoogte-lijn en de blauwe kijkrichting-lijn blijven vanilla.
